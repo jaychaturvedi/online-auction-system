@@ -6,6 +6,12 @@ export abstract class AppError extends Error {
     this.errorCode = errorCode;
   }
 }
+export class ApiError extends AppError {
+  constructor(m: string, errorCode: number) {
+    super(m, errorCode);
+    this.name = "API_EROR";
+  }
+}
 
 export class BadRequestError extends AppError {
   constructor(m: string) {
@@ -41,3 +47,5 @@ export class InternalServerError extends AppError {
     this.name = "INTERNAL_SERVER_ERROR";
   }
 }
+
+export default AppError;

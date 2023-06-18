@@ -7,7 +7,7 @@ import {
   UnauthorizedError,
   AppError,
   InternalServerError,
-} from "./error";
+} from "./appError";
 
 type TResponseStatus =
   | "ERROR"
@@ -25,7 +25,7 @@ type TResponseStatus =
 export function createResponse(
   status: TResponseStatus,
   body: any,
-  error: { code: number; message: string; name: string } | undefined
+  error: { code: number; message: string; name: string } | undefined | null
 ) {
   return {
     status: body !== undefined ? status : "ERROR",
@@ -73,14 +73,9 @@ export function expressErrorHandler(
   // next();
 }
 
-export function expressQAsync(fn: Function) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };
-}
-
 export function validate(req: Request, res: Response, next: NextFunction) {
   const errors = validationResult(req);
+  console.log(errors);
   if (!errors.isEmpty()) {
     const errlist = errors.array().map((err) => {
       return err.msg;
