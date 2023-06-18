@@ -2,7 +2,7 @@ import Sequelize, { BuildOptions, DataTypes, Model } from "sequelize";
 import db from "../db";
 
 export interface TUser {
-  _id: string;
+  id: string;
   password: string;
   email: string;
   balance: number;
