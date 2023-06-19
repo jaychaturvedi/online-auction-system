@@ -15,8 +15,13 @@ type TUserModel<T> = typeof Model & {
 };
 
 let User: TUserModel<TUser & Model> = <TUserModel<TUser & Model>>db.define(
-  "user",
+  "User",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -46,8 +51,5 @@ let User: TUserModel<TUser & Model> = <TUserModel<TUser & Model>>db.define(
     timestamps: true,
   }
 );
-User.sync()
-  .then(() => console.log("User table created successfully"))
-  .catch((error) => console.error("Error creating User table:", error));
 
 export default User;
