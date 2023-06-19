@@ -15,7 +15,7 @@ export const createUser = catchAsync(
       return next(new BadRequestError("Missing required fields"));
     }
 
-    let user = await models.UserModel.findOne({ where: { email } });
+    let user = await models.User.findOne({ where: { email } });
 
     if (user) {
       return next(new BadRequestError("Email is already in use"));
@@ -24,7 +24,7 @@ export const createUser = catchAsync(
 
     const encryptedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await models.UserModel.create({
+    const newUser = await models.User.create({
       name,
       email,
       password: encryptedPassword,
@@ -51,7 +51,7 @@ export const createUser = catchAsync(
 
 export const getMyProfile = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    const profile = await models.UserModel.findByPk(req.user.id);
+    const profile = await models.User.findByPk(req.user.id);
     if (!profile) {
       return next(new NotFoundError("There is no profile for this user"));
     }

@@ -21,7 +21,7 @@ export const loginUser = catchAsync(
       return next(new BadRequestError("Please provide email and password"));
     }
 
-    let user = await models.UserModel.findOne({ where: { email } });
+    let user = await models.User.findOne({ where: { email } });
 
     if (!user) {
       return next(new UnauthorizedError("Incorrect email or password"));
@@ -79,7 +79,7 @@ export const authenticate = catchAsync(
 
 export const updatePassword = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    let user = await models.UserModel.findByPk(req.user.id);
+    let user = await models.User.findByPk(req.user.id);
     if (!user) {
       throw new NotFoundError("User Not Found");
     }
