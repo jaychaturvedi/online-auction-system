@@ -7,6 +7,7 @@ import userRouter from "./routes/userRouter";
 import authRouter from "./routes/authRouter";
 import bidRouter from "./routes/bidRouter";
 import itemRouter from "./routes/itemRouter";
+import refundFailedBidsCron from "./cronJobs/refundFailedBidsCron";
 dotenv.config();
 
 const app = express();
@@ -18,5 +19,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/bid", bidRouter);
 app.use("/api/item", itemRouter);
 app.use(expressErrorHandler);
+refundFailedBidsCron.start();
 
 export default app;
