@@ -5,6 +5,8 @@ import * as bodyparser from "body-parser";
 import { expressErrorHandler } from "./utils/helper";
 import userRouter from "./routes/userRouter";
 import authRouter from "./routes/authRouter";
+import bidRouter from "./routes/bidRouter";
+import itemRouter from "./routes/itemRouter";
 dotenv.config();
 
 const app = express();
@@ -13,6 +15,8 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/bid", bidRouter);
+app.use("/api/item", itemRouter);
 app.use(expressErrorHandler);
 
 export default app;

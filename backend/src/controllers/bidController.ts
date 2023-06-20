@@ -1,41 +1,44 @@
 import catchAsync from "../utils/catchAsync";
 import express, { Request, Response, NextFunction } from "express";
+import { createResponse } from "../utils/helper";
+import { BadRequestError, NotFoundError } from "../utils/appError";
 
 // bidController.js
-const { Bid, Item } = require("../models");
+import models from "../models";
 
 // Controller action for placing a bid
 export const placeBid = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: any, res: Response, next: NextFunction) => {
     const { itemId, userId, amount } = req.body;
-
     // Check if the bid amount is higher than the current highest bid and starting price
-    const item = await Item.findByPk(itemId);
+    const item = await models.Item.findByPk(itemId);
     if (!item) {
-      return res.status(404).json({ success: false, error: "Item not found" });
+      throw new NotFoundError("Item not found");
     }
-
     if (amount <= item.startingPrice) {
-      return res.status(400).json({
-        success: false,
-        error: "Bid amount should be higher than the starting price",
-      });
+      throw new BadRequestError(
+        "Bid amount should be higher than the starting price"
+      );
     }
-
-    if (item.highestBid && amount <= item.highestBid) {
-      return res.status(400).json({
-        success: false,
-        error: "Bid amount should be higher than the current highest bid",
-      });
+    if (item.currentPrice && amount <= item.currentPrice) {
+      throw new BadRequestError(
+        "Bid amount should be higher than the current highest bid"
+      );
+    }
+    const user = await models.User.findByPk(req.user.id);
+    if (user?.balance! < amount) {
+      throw new BadRequestError("User does not have enough balance to bid");
     }
 
     // Place the bid
-    const newBid = await Bid.create({ itemId, userId, amount });
+    const newBid = await models.Bid.create({ itemId, userId, amount });
 
     // Update the item's highest bid
-    item.highestBid = amount;
+    item.currentPrice = amount;
+    user!.balance = user!.balance! - amount;
     await item.save();
+    await user!.save();
 
-    res.status(201).json({ success: true, bid: newBid });
+    res.status(201).json(createResponse("OK", newBid));
   }
 );

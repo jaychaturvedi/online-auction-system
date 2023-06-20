@@ -43,7 +43,7 @@ export const createUser = catchAsync(
       { expiresIn: 360000 },
       (err, token) => {
         if (err) throw err;
-        res.json(createResponse("OK", { ...newUser.toJSON(), token }, null));
+        res.json(createResponse("OK", { ...newUser.toJSON(), token }));
       }
     );
   }
@@ -55,6 +55,70 @@ export const getMyProfile = catchAsync(
     if (!profile) {
       return next(new NotFoundError("There is no profile for this user"));
     }
-    res.json(createResponse("OK", profile, null));
+    res.json(createResponse("OK", profile));
+  }
+);
+export const getAllUsers = catchAsync(
+  async (req: any, res: Response, next: NextFunction) => {
+    const users = await models.User.findAll();
+    if (!users) {
+      throw new NotFoundError("There is no users for this user");
+    }
+    res.json(createResponse("OK", users));
+  }
+);
+
+export const getUserBidHistory = catchAsync(
+  async (req: any, res: Response, next: NextFunction) => {
+    const bids = await models.Bid.findAll({
+      where: { user: req.user.id },
+      include: {
+        model: models.User,
+        required: false,
+        attributes: ["id", "name", "balance"],
+      },
+    });
+    res
+      .status(200)
+      .json(createResponse("OK", { totalBids: bids.length, bids }));
+  }
+);
+
+export const getUserById = catchAsync(
+  async (req: any, res: Response, next: NextFunction) => {
+    const user = await models.User.findByPk(req.param.id, {
+      attributes: { exclude: ["password"] },
+    });
+    if (!user) {
+      return next(new NotFoundError("No user found"));
+    }
+    res.status(200).json(createResponse("OK", { user }));
+  }
+);
+export const updateUserBalanceById = catchAsync(
+  async (req: any, res: Response, next: NextFunction) => {
+    const [isUpdated, [user]] = await models.User.update(
+      { balance: req.body.balance },
+      {
+        where: { id: req.user.id },
+        returning: true,
+      }
+    );
+    if (!user) {
+      return next(new NotFoundError("No user found"));
+    }
+    res.status(200).json(createResponse("OK", { user }));
+  }
+);
+export const updateUserById = catchAsync(
+  async (req: any, res: Response, next: NextFunction) => {
+    const [isUpdated, [user]] = await models.User.update(req.body.user, {
+      where: { id: req.user.id },
+      returning: true,
+    });
+    if (!user) {
+      return next(new NotFoundError("No user found"));
+    }
+    res.status(200).json(createResponse("OK", { user }));
   }
 );

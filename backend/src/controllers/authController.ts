@@ -18,19 +18,19 @@ export const loginUser = catchAsync(
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return next(new BadRequestError("Please provide email and password"));
+      throw new BadRequestError("Please provide email and password");
     }
 
     let user = await models.User.findOne({ where: { email } });
 
     if (!user) {
-      return next(new UnauthorizedError("Incorrect email or password"));
+      throw new UnauthorizedError("Incorrect email or password");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return next(new UnauthorizedError("Incorrect email or password"));
+      throw new UnauthorizedError("Incorrect email or password");
     }
 
     const payload = {
