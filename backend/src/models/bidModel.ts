@@ -5,7 +5,7 @@ export interface TBid {
   itemId: number;
   userId: number;
   amount: number;
-  bidTime: string;
+  status: "open" | "success" | "failed";
 }
 
 type TBidModel<T> = typeof Model & {
@@ -43,13 +43,11 @@ let Bid: TBidModel<TBid & Model> = <TBidModel<TBid & Model>>db.define(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
-    bidTime: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     status: {
       //to track which biddings were success or failed
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
+      values: ["open", "success", "failed"],
+      defaultValue: "open",
     },
   },
   {
