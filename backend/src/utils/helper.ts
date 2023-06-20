@@ -23,13 +23,13 @@ type TResponseStatus =
   | "INTERNAL_SERVER_ERROR";
 
 export function createResponse(
-  status: TResponseStatus,
+  message: TResponseStatus,
   body: any,
-  error: { code: number; message: string; name: string } | undefined | null
+  error?: { code: number; message: string; name: string } | undefined | null
 ) {
   return {
-    status: body !== undefined ? status : "ERROR",
-    message: body !== undefined ? "Success" : error?.message,
+    status: body !== undefined ? true : false,
+    message: body !== undefined ? message : error?.message,
     body: body ? body : null,
     error:
       error !== undefined

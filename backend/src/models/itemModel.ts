@@ -50,6 +50,10 @@ let Item: TItemModel<TItem & Model> = <TItemModel<TItem & Model>>db.define(
       //sellerId is primary key id in users table
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
     },
     refundProcessed: {
       //to track which item's failed biddings are refunded
