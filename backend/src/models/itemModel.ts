@@ -4,9 +4,11 @@ export interface TItem {
   id: number;
   name: string;
   startingPrice: number;
+  currentPrice: number;
   auctionStartTime: number;
-  auctionEndTime: string;
+  auctionEndTime: number;
   sellerId: number;
+  refundProcessed: boolean;
 }
 
 type TItemModel<T> = typeof Model & {
@@ -31,6 +33,11 @@ let Item: TItemModel<TItem & Model> = <TItemModel<TItem & Model>>db.define(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
+    currentPrice: {
+      //current bidding price of the item
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+    },
     auctionStartTime: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -43,6 +50,11 @@ let Item: TItemModel<TItem & Model> = <TItemModel<TItem & Model>>db.define(
       //sellerId is primary key id in users table
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    refundProcessed: {
+      //to track which item's failed biddings are refunded
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
