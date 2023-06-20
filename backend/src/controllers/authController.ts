@@ -36,6 +36,7 @@ export const loginUser = catchAsync(
     const payload = {
       user: {
         id: user.id,
+        email: user.email,
       },
     };
 

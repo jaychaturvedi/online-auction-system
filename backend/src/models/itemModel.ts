@@ -8,7 +8,7 @@ export interface TItem {
   auctionStartTime: number;
   auctionEndTime: number;
   sellerId: number;
-  refundProcessed: boolean;
+  status: "open" | "sold" | "notsold";
 }
 
 type TItemModel<T> = typeof Model & {
@@ -55,10 +55,10 @@ let Item: TItemModel<TItem & Model> = <TItemModel<TItem & Model>>db.define(
         key: "id",
       },
     },
-    refundProcessed: {
-      //to track which item's failed biddings are refunded
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    status: {
+      type: DataTypes.ENUM,
+      values: ["open", "sold", "notsold"],
+      defaultValue: "open",
     },
   },
   {

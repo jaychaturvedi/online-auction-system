@@ -9,11 +9,17 @@ import models from "../models";
 // Controller action for placing a bid
 export const placeBid = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    const { itemId, userId, amount } = req.body;
+    let { itemId, userId, amount } = req.body;
     // Check if the bid amount is higher than the current highest bid and starting price
     const item = await models.Item.findByPk(itemId);
     if (!item) {
       throw new NotFoundError("Item not found");
+    }
+    if (item.status != "open") {
+      throw new BadRequestError(`Item is already ${item.status} in auction`);
+    }
+    if (item.sellerId == userId) {
+      throw new BadRequestError("Owner of item cannot place bid");
     }
     if (amount <= item.startingPrice) {
       throw new BadRequestError(
@@ -40,5 +46,33 @@ export const placeBid = catchAsync(
     await user!.save();
 
     res.status(201).json(createResponse("OK", newBid));
+  }
+);
+
+export const getBidsByItemId = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const item = await models.Item.findOne({
+      where: { id: req.params.itemId },
+      include: [
+        {
+          model: models.User,
+          required: false,
+          attributes: ["id", "name", "balance"],
+        },
+        {
+          model: models.Bid,
+          required: false,
+          order: [["id", "ASC"]],
+          include: [
+            {
+              model: models.User,
+              required: false,
+              attributes: ["id", "name", "balance"],
+            },
+          ],
+        },
+      ],
+    });
+    res.status(200).json(createResponse("OK", item));
   }
 );

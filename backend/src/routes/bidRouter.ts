@@ -11,5 +11,9 @@ router.post(
   controllers.authController.authenticate,
   controllers.bidController.placeBid
 );
+// @route    POST api/bid
+// @desc     Get All Bids for a item
+// @access   Public
+router.get("/:itemId", controllers.bidController.getBidsByItemId);
 
 export default router;
