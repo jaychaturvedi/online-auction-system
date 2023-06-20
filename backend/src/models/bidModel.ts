@@ -24,11 +24,19 @@ let Bid: TBidModel<TBid & Model> = <TBidModel<TBid & Model>>db.define(
       //itemId is primary key id in items table and refers to bid placed for item
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Items",
+        key: "id",
+      },
     },
     userId: {
       //userId is primary key id in users table and refers to bid placed by user
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
     },
     amount: {
       //amount refers to bid amount placed for item
@@ -38,6 +46,10 @@ let Bid: TBidModel<TBid & Model> = <TBidModel<TBid & Model>>db.define(
     bidTime: {
       type: DataTypes.DATE,
       allowNull: false,
+    },
+    status: {
+      //to track which biddings were success or failed
+      type: DataTypes.STRING,
     },
   },
   {
