@@ -30,22 +30,7 @@ export const createUser = catchAsync(
       password: encryptedPassword,
     });
 
-    const payload = {
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET!,
-      { expiresIn: 360000 },
-      (err, token) => {
-        if (err) throw err;
-        res.json(createResponse("OK", { ...newUser.toJSON(), token }));
-      }
-    );
+    res.json(createResponse("OK", { ...newUser.toJSON() }));
   }
 );
 
@@ -71,7 +56,7 @@ export const getAllUsers = catchAsync(
 export const getUserBidHistory = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
     const bids = await models.Bid.findAll({
-      where: { user: req.user.id },
+      where: { userId: req.user.id },
       include: {
         model: models.User,
         required: false,
@@ -86,7 +71,7 @@ export const getUserBidHistory = catchAsync(
 
 export const getUserById = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    const user = await models.User.findByPk(req.param.id, {
+    const user = await models.User.findByPk(req.params.id, {
       attributes: { exclude: ["password"] },
     });
     if (!user) {
@@ -97,17 +82,18 @@ export const getUserById = catchAsync(
 );
 export const updateUserBalanceById = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    const [isUpdated, [user]] = await models.User.update(
+    const [[user], isUpdated] = await models.User.increment(
       { balance: req.body.balance },
       {
         where: { id: req.user.id },
-        returning: true,
       }
     );
     if (!user) {
       return next(new NotFoundError("No user found"));
     }
-    res.status(200).json(createResponse("OK", { user }));
+    res
+      .status(200)
+      .json(createResponse("Balance Update Successfully" as any, user));
   }
 );
 export const updateUserById = catchAsync(
