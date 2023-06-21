@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { get } from "lodash";
-import showNotification from "./notification";
+import showNotification from "../utils/notification";
 import { getToken } from "../utils/localstorage";
 
 export const BASE_URL = "http://localhost:5000/api";
