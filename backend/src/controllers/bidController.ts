@@ -9,7 +9,8 @@ import models from "../models";
 // Controller action for placing a bid
 export const placeBid = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    let { itemId, userId, amount } = req.body;
+    let { itemId, amount } = req.body;
+    const userId = req.user.id;
     // Check if the bid amount is higher than the current highest bid and starting price
     const item = await models.Item.findByPk(itemId);
     if (!item) {
@@ -31,7 +32,7 @@ export const placeBid = catchAsync(
         "Bid amount should be higher than the current highest bid"
       );
     }
-    const user = await models.User.findByPk(req.user.id);
+    const user = await models.User.findByPk(userId);
     if (user?.balance! < amount) {
       throw new BadRequestError("User does not have enough balance to bid");
     }

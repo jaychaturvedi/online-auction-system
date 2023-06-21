@@ -98,7 +98,7 @@ export const updateUserBalanceById = catchAsync(
 );
 export const updateUserById = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    const [isUpdated, [user]] = await models.User.update(req.body.user, {
+    const [isUpdated, [user]] = await models.User.update(req.body, {
       where: { id: req.user.id },
       returning: true,
     });
