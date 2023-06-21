@@ -1,0 +1,65 @@
+.App {
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+  }
+   label {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+   input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    font-size: 16px;
+  }
+   button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+   button[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
+   .error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .registration-form{
+    width: 50%;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .registration-form div {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .registration-form input {
+    margin-bottom: 5px;
+  }
+
+
+  .login-form{
+    width: 50%;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .login-form div {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .login-form input {
+    margin-bottom: 5px;
+  }
