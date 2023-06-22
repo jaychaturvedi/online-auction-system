@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = getToken();
     if (token) {
-      config.headers["x-access-token"] = token;
+      config.headers["x-auth-token"] = token;
     }
     return config;
   },
@@ -51,12 +51,11 @@ export const resolveRequest = async (requestPromise: Promise<any>) => {
     data = result.data;
     data.statusCode = result.status;
     console.log("result", result.data);
-    if (data.status) {
-      showNotification(data.message, {
-        type: "success",
-      });
-    }
-    return data;
+    // if (data.status) {
+    //   showNotification(data.message, {
+    //     type: "success",
+    //   });
+    // }
   } catch (e) {
     const errorData = get(e, "response.data.error");
     const statusCode = get(e, "response.status");
@@ -74,7 +73,7 @@ export const resolveRequest = async (requestPromise: Promise<any>) => {
     data.message = e?.message;
     data.status = false;
     data.body = null;
-    console.log("e", e, data);
+    console.log("error", data);
   }
 
   return data;

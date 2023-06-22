@@ -29,6 +29,7 @@ interface TLoginUser {
 const users = {
   getUser: (id: number) => resolveRequest(request.get(`/users/${id}`, {})),
   getUserBids: () => resolveRequest(request.get(`/users/bids`, {})),
+  getMyProfile: () => resolveRequest(request.get(`/users/me`, {})),
   getAllUsers: () => resolveRequest(request.get(`/users`, {})),
   registerUser: (body: TRegisterUser) =>
     resolveRequest(request.post(`/users`, body)),
@@ -45,8 +46,9 @@ const auth = {
 };
 const item = {
   getItem: (itemId) => resolveRequest(request.get(`/item/${itemId}`, {})),
-  getAllItems: () => resolveRequest(request.get(`/item`, {})),
-  createItem: (body: TCreateItem) => resolveRequest(request.post(`/`, body)),
+  getAllItems: (query) => resolveRequest(request.get(`/item?${query}`, {})),
+  createItem: (body: TCreateItem) =>
+    resolveRequest(request.post(`/item`, body)),
 };
 const bid = {
   placeBid: (body: TPlaceBid) => resolveRequest(request.post(`/bid`, body)),
