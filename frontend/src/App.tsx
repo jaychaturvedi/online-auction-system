@@ -1,8 +1,7 @@
 import "./App.css";
 import { ToastContainer } from "react-toastify";
-import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Layout/Navbar";
-import LoginRegistrationForm from "./components/Forms/LoginRegistrationForm";
+import AppRoutes from "./components/Routing/AppRoutes";
 
 function App() {
   return (
@@ -10,18 +9,7 @@ function App() {
       <Navbar />
       {/* A <Switch> looks through its children <Route>s and
           renders the first one that matches the current URL. */}
-      <Routes>
-        <Route path="/" element={<div>/</div>} />
-        <Route
-          path="/login"
-          element={<LoginRegistrationForm currentTab="login" />}
-        />
-        <Route
-          path="/signup"
-          element={<LoginRegistrationForm currentTab="signup" />}
-        />
-      </Routes>
-
+      <AppRoutes />
       {/* toast notification for api calls */}
       <ToastContainer
         position="top-right"
