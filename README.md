@@ -1,5 +1,12 @@
 # Online Auction System
 
+## Setup
+-git clone https://github.com/jaychaturvedi/online-auction-system.git
+- To run backend:  cd backend && npm i && npm run dev
+- To run frontend:  cd frontend && npm i && npm run start
+
+Note: .env file is pushed for ease of running backend
+
 ## Contents
 Technologies Used
  - Node.js
@@ -39,3 +46,5 @@ Pages & Components:
 - Navbar Component
 
 Libraries Used: formik, yup, axios, mui/material, lodash, moment, material-icons, react-toastify
+
+
