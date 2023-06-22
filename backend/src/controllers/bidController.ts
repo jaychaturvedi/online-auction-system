@@ -5,6 +5,8 @@ import { BadRequestError, NotFoundError } from "../utils/appError";
 
 // bidController.js
 import models from "../models";
+import moment from "moment";
+import { TBid } from "../models/bidModel";
 
 // Controller action for placing a bid
 export const placeBid = catchAsync(
@@ -31,6 +33,13 @@ export const placeBid = catchAsync(
       throw new BadRequestError(
         "Bid amount should be higher than the current highest bid"
       );
+    }
+    const bid = (await models.Bid.findOne({
+      order: [["createdAt", "DESC"]],
+      where: { itemId, userId },
+    })) as any as TBid;
+    if (bid && moment().diff(bid.createdAt, "seconds") <= 6) {
+      throw new BadRequestError("Wait for 6 seconds before placing new bid");
     }
     const user = await models.User.findByPk(userId);
     if (user?.balance! < amount) {

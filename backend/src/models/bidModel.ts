@@ -6,6 +6,8 @@ export interface TBid {
   userId: number;
   amount: number;
   status: "open" | "success" | "failed";
+  createdAt: any;
+  updatedAt: any;
 }
 
 type TBidModel<T> = typeof Model & {

@@ -9,6 +9,8 @@ export interface TItem {
   auctionEndTime: number;
   sellerId: number;
   status: "open" | "sold" | "notsold";
+  createdAt: any;
+  updatedAt: any;
 }
 
 type TItemModel<T> = typeof Model & {

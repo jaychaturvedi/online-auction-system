@@ -8,6 +8,8 @@ export interface TUser {
   balance: number;
   name: string;
   address: string;
+  createdAt: any;
+  updatedAt: any;
 }
 
 type TUserModel<T> = typeof Model & {
