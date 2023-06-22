@@ -62,7 +62,6 @@ export function expressErrorHandler(
     status = (err.name as TResponseStatus) || "UNKNOWN_ERROR";
     statusCode = err.errorCode;
   }
-  console.log(err.name);
   const response = createResponse(status, undefined, {
     code: (err as AppError).errorCode,
     name: err.name,
@@ -75,7 +74,6 @@ export function expressErrorHandler(
 
 export function validate(req: Request, res: Response, next: NextFunction) {
   const errors = validationResult(req);
-  console.log(errors);
   if (!errors.isEmpty()) {
     const errlist = errors.array().map((err) => {
       return err.msg;

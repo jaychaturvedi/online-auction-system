@@ -78,18 +78,7 @@ export const getAllItems = catchAsync(
     if (status && status !== "open") {
       Object.assign(condition, { where: { status: { [Op.ne]: "open" } } });
     }
-    console.log(condition);
     const items = await models.Item.findAll(condition);
     res.status(200).json(createResponse("OK", items));
   }
 );
-
-// export const getUsersAllItems = catchAsync(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     console.log("createItem", req);
-//     const { itemId } = req.body;
-//     const item = await models.Item.findAll({where:{itemId, sellerId: userId}});
-//     console.log("createItem", req);
-//     res.json(item);
-//   }
-// );
