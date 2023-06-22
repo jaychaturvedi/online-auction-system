@@ -4,6 +4,8 @@ import api from "../../config/api";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
 import { useStore } from "../../store/useStore";
+import showNotification from "../../utils/notification";
+import Countdown from "../Layout/Countdown";
 
 function ItemDetails(props) {
   let { id } = useParams();
@@ -62,6 +64,17 @@ function ItemDetails(props) {
         <span>Total Bids :</span>
         <span style={{ fontWeight: "bold" }}>{item.Bids?.length}</span>
       </div>
+      <div style={{ display: "grid", gridTemplateColumns: "0.5fr 1fr" }}>
+        <span>Expiring In :</span>
+        <span>
+          {item.auctionEndTime && (
+            <Countdown
+              endDate={item.auctionEndTime}
+              key={item.auctionEndTime}
+            />
+          )}
+        </span>
+      </div>
       <Formik
         initialValues={{
           amount: "",
@@ -76,6 +89,7 @@ function ItemDetails(props) {
             resetForm();
             getItemById();
             const resp = await api.users.getMyProfile();
+            showNotification("Your Bid Is Placed");
             if (resp.status)
               dispatch({ type: "UPDATE_BALANCE", payload: resp.body?.balance });
           }
