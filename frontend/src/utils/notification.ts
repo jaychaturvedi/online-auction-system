@@ -7,7 +7,8 @@ const showNotification = (message: any, options?: ToastOptions<{}>) => {
     theme: "colored",
     position: "top-right",
     hideProgressBar: false,
-    autoClose: 2000,
+    autoClose: 1000,
+    type: "success",
     ...options,
   });
 };
