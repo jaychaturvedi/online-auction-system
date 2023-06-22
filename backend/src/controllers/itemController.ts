@@ -5,6 +5,7 @@ import moment from "moment";
 import models from "../models";
 import { createResponse } from "../utils/helper";
 import { BadRequestError } from "../utils/appError";
+import { Op } from "sequelize";
 
 export const createItem = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -19,31 +20,67 @@ export const createItem = catchAsync(
       sellerId,
       startingPrice: startingPrice,
       auctionStartTime: moment().valueOf(),
-      auctionEndTime: moment().add(timeFrameType, time).valueOf(),
+      auctionEndTime: moment().add(time, timeFrameType).valueOf(),
     });
-    res.json(newItem);
+    res.status(200).json(createResponse("New Item Created" as any, newItem));
   }
 );
 
 export const getItemById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { itemId } = req.body;
-    const item = await models.Item.findByPk(itemId);
-    res.json(item);
+    const { itemId } = req.params;
+    const item = await models.Item.findByPk(itemId, {
+      include: [
+        {
+          model: models.Bid,
+          required: false,
+          order: [["createdAt", "DESC"]],
+        },
+        {
+          model: models.User,
+          required: false,
+          attributes: ["id", "name", "balance"],
+        },
+      ],
+    });
+    res.status(200).json(createResponse("OK", item));
   }
 );
 export const getUsersItemById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { itemId } = req.body;
     const item = await models.Item.findByPk(itemId);
-    res.json(item);
+    res.status(200).json(createResponse("OK", item));
   }
 );
 
 export const getAllItems = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const items = await models.Item.findAll();
-    res.json(createResponse("OK", items, null));
+    const { status } = req.query;
+    const condition: any = {
+      order: [["createdAt", "DESC"]],
+      include: {
+        model: models.Bid,
+        required: false,
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: models.User,
+            required: false,
+            attributes: ["id", "name", "balance"],
+          },
+        ],
+      },
+    };
+    if (status && status === "open") {
+      Object.assign(condition, { where: { status: { [Op.eq]: status } } });
+    }
+    if (status && status !== "open") {
+      Object.assign(condition, { where: { status: { [Op.ne]: "open" } } });
+    }
+    console.log(condition);
+    const items = await models.Item.findAll(condition);
+    res.status(200).json(createResponse("OK", items));
   }
 );
 

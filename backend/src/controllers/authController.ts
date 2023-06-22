@@ -46,7 +46,7 @@ export const loginUser = catchAsync(
       { expiresIn: 360000 },
       (err, token) => {
         if (err) throw err;
-        res.json(createResponse("OK", { token }, null));
+        res.json(createResponse("OK", { token, ...user?.toJSON() }, null));
       }
     );
   }
