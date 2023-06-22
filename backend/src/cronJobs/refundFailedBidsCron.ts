@@ -23,7 +23,7 @@ async function TriggerJob() {
     },
   });
   for (const item of itemBiddings) {
-    console.log("item expired ", item.id);
+    //item expired
     const promises = [
       models.Bid.update(
         { status: "success" }, //if the auction has closed, mark bid as success whose prices matches currentPrice

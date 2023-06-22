@@ -82,18 +82,20 @@ export const getUserById = catchAsync(
 );
 export const updateUserBalanceById = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
-    const [[user], isUpdated] = await models.User.increment(
+    const [[user], isUpdated] = (await models.User.increment(
       { balance: req.body.balance },
       {
         where: { id: req.user.id },
       }
-    );
+    )) as any;
     if (!user) {
       return next(new NotFoundError("No user found"));
     }
-    res
-      .status(200)
-      .json(createResponse("Balance Update Successfully" as any, user));
+    res.status(200).json(
+      createResponse("Balance Update Successfully" as any, {
+        ...user[0],
+      })
+    );
   }
 );
 export const updateUserById = catchAsync(
