@@ -16,6 +16,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { useStore } from "../../store/useStore";
 import Filter from "./Filter";
 import showNotification from "../../utils/notification";
+import debounce from "../../utils/debounce";
 interface Column {
   id:
     | "name"
@@ -144,10 +145,10 @@ export default function ItemList() {
           }}
         />
         <RefreshIcon
-          onClick={() => {
+          onClick={debounce(() => {
             getAllItems();
             showNotification("Fetched Data");
-          }}
+          })}
         />
       </div>
 

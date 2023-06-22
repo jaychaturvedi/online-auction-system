@@ -50,7 +50,6 @@ export const resolveRequest = async (requestPromise: Promise<any>) => {
     const result = await requestPromise;
     data = result.data;
     data.statusCode = result.status;
-    console.log("result", result.data);
     // if (data.status) {
     //   showNotification(data.message, {
     //     type: "success",
@@ -59,18 +58,17 @@ export const resolveRequest = async (requestPromise: Promise<any>) => {
   } catch (e) {
     const errorData = get(e, "response.data.error");
     const statusCode = get(e, "response.status");
-
     if ([400, 401, 403, 404, 500].includes(statusCode)) {
       showNotification(errorData?.message, { type: "error" });
     }
     data = typeof errorData === "object" ? errorData : {};
 
     data.error = {
-      code: e?.code,
-      name: e?.name,
-      message: e?.message,
+      code: errorData?.code,
+      name: errorData?.name,
+      message: errorData?.message,
     };
-    data.message = e?.message;
+    data.message = errorData?.message;
     data.status = false;
     data.body = null;
     console.log("error", data);
