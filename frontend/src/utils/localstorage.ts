@@ -4,3 +4,6 @@ export const setToken = (token) => {
 export const getToken = () => {
   return localStorage.getItem("x-auth-token");
 };
+export const clearToken = () => {
+  return localStorage.removeItem("x-auth-token");
+};
